@@ -1,4 +1,3 @@
-package com.Jk;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +32,7 @@ class GamePanel extends JPanel implements ActionListener {
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
     int bodyParts = 4;
-    int applesEaten = 0;
+    int points = 0;
     int appleX ;
     int appleY ;
     char direction = 'R';
@@ -44,7 +43,7 @@ class GamePanel extends JPanel implements ActionListener {
     GamePanel(){
         rand = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
-        this.setBackground(Color.black);
+        this.setBackground(Color.white);
         this.setFocusable(true);
         this.addKeyListener(new myKeyAdapter());
         startGame();
@@ -70,17 +69,17 @@ class GamePanel extends JPanel implements ActionListener {
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
                     g.setColor(Color.green);
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    g.fillOval(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 } else {
                     g.setColor(new Color(45, 180, 0));
                     //g.setColor(new Color(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255)));
-                    g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                    g.fillOval(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
-            g.setColor(Color.red);
-            g.setFont(new Font("INK FREE",Font.BOLD,40));
+            g.setColor(Color.black);
+            g.setFont(new Font("Verdana",Font.BOLD,40));
             FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("Score: "+applesEaten,(SCREEN_WIDTH - metrics.stringWidth("Score: "+applesEaten))/2,g.getFont().getSize());
+            g.drawString("Score: "+points,(SCREEN_WIDTH - metrics.stringWidth("Score: "+points))/2,g.getFont().getSize());
         }
         else {
             gameOver(g);
@@ -115,7 +114,7 @@ class GamePanel extends JPanel implements ActionListener {
     public void checkApple(){
         if((x[0] == appleX) && (y[0] == appleY)){
             bodyParts++;
-            applesEaten++;
+            points++;
             newApple();
         }
     }
@@ -124,29 +123,34 @@ class GamePanel extends JPanel implements ActionListener {
             if((x[0] == x[i] && y[0] == y[i])){         // CHECKS IF COLLIDES WITH BODY
                 running = false;
             }
-            if(x[0]<0){                                // CHECKS IF HEAD TOUCHES LEFT BORDER
+            else if(x[0]<0){                                // CHECKS IF HEAD TOUCHES LEFT BORDER
                 running = false;
             }
-            if(x[0]>SCREEN_WIDTH){                     //CHECKS IF HEAD TOUCHES RIGHT BORDER
+            else if(x[0]>SCREEN_WIDTH){                     //CHECKS IF HEAD TOUCHES RIGHT BORDER
                 running = false;
             }
-            if(y[0]>SCREEN_HEIGHT){                     //CHECKS IF HEAD TOUCHES BOTTOM
+            else if(y[0]>SCREEN_HEIGHT){                     //CHECKS IF HEAD TOUCHES BOTTOM
                 running = false;
             }
-            if(y[0]<0){                             // CHECKS IF HEAD TOUCHES TOP
+            else if(y[0]<0){                             // CHECKS IF HEAD TOUCHES TOP
                 running = false;
             }
         }
     }
     public void gameOver(Graphics g){
         // SCORE TEXT
-        g.setColor(Color.red);
-        g.setFont(new Font("INK FREE",Font.BOLD,40));
+        g.setColor(Color.black);
+        g.setFont(new Font("Verdana",Font.BOLD,40));
         FontMetrics metrics1 = getFontMetrics(g.getFont());
-        g.drawString("Score: "+applesEaten,(SCREEN_WIDTH - metrics1.stringWidth("Score: "+applesEaten))/2,g.getFont().getSize());
+		if(points>6)
+			g.drawString("Good Score",(SCREEN_WIDTH - metrics1.stringWidth("Good Score"))/2,g.getFont().getSize());
+		else if(points>15)
+			g.drawString("High Score",(SCREEN_WIDTH - metrics1.stringWidth("High Score"))/2,g.getFont().getSize());
+		else 
+			g.drawString("Low Score",(SCREEN_WIDTH - metrics1.stringWidth("Low Score"))/2,g.getFont().getSize());
         // GAME OVER TEXT
         g.setColor(Color.red);
-        g.setFont(new Font("INK FREE",Font.BOLD,75));
+        g.setFont(new Font("Verdana",Font.BOLD,75));
         FontMetrics metrics = getFontMetrics(g.getFont());
         g.drawString("Game Over",(SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2,SCREEN_HEIGHT/2);
     }
